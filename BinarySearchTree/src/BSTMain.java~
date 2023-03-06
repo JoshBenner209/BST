@@ -1,0 +1,19 @@
+/*
+ * Currently works.
+ * need to add some ASCI Art to the menu and comments to make it better and some print statments to clarify thing like "number of records" etc... 
+ */
+
+public class BSTMain {
+
+	public static void main(String[] args) {
+		Dictionairy dictionairy=new Dictionairy();
+		boolean play=true;
+		while(play) {
+			play=dictionairy.menu();
+			
+		}
+			
+
+	}
+
+}
