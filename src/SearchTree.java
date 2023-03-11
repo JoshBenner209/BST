@@ -11,15 +11,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 
 public class SearchTree<E extends Comparable<E>> {
     private SearchTreeNode<E> overallRoot; // root of overall tree
-
+    private int balanceFactor;
+    private int height;
     //constructs an empty search tree
     public SearchTree() {
         overallRoot = null;
+        height=height();
+        balanceFactor= balanceFactor();
     }
+    public int height() {
+        if(overallRoot==null){
+            return 0;
+        }// hef
 
+        return result;
+        
+    }
     //add adds value to tree
     //param value is the data to be stored in root
     public void add(E value) {
@@ -37,7 +49,9 @@ public class SearchTree<E extends Comparable<E>> {
         } else {
             root.right = add(root.right, value);
         }
-        return root;
+            update(root);
+        return balance(node);
+        //return root;
     }
 
     // post: returns true if tree contains value, returns false otherwise
