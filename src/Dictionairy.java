@@ -25,45 +25,6 @@ public class Dictionairy {
 	
     }
     // add info for person
-    public void add() {
-		
-	System.out.println("Enter first name:");
-	String firstName=scan.next();
-	scan.nextLine();
-	System.out.println("Enter Last Name:");
-	String LastName=scan.next();
-	scan.nextLine();
-	System.out.println("Enter Email Address:");
-	String email=scan.next();
-	scan.nextLine();
-	System.out.println("Enter phone Number:");
-	String phoneNumber=scan.nextLine();
-	System.out.println("Enter Address:");
-	String address=scan.nextLine();
-	System.out.println("Enter City:");
-	String city=scan.next();
-	scan.nextLine();
-	System.out.println("Enter state:");
-	String state= scan.next();
-	scan.nextLine();
-	System.out.println("Enter zip Code:");
-	String zip= scan.next();
-	scan.nextLine();
-	boolean exist=true;
-	while(exist) {
-	    System.out.println("Enter primary key: ");
-	    int key= scan.nextInt();
-	    scan.nextLine();	
-	    if (!verify(key)) {
-		exist=false;
-		PersonInfo person=new PersonInfo(firstName,LastName,
-						 state,address,phoneNumber,city,zip,email,key);
-		this.tree.add(key);
-		this.mapIntToPerson.put(key, person);
-		System.out.println("\nadded:\n"+person.toString()+"\nkey for "+firstName+": "+key+"\n");
-	    }
-    }
-    }
 	public void addEntry(Integer id, String fName, String lName, String email,
 	String phone,String address,String city,String state,String zip ){
 		if (!verify(id)) {
@@ -205,11 +166,11 @@ public class Dictionairy {
     }
     //verify that the tree contains key
     // param key is the value stored in tree
-    private boolean verify(int key) {
+    boolean verify(int key) {
 	if(tree.contains(key)){
 	    return true;
 	}else {
-	    System.out.println("key not found");
+	    //System.out.println("key not found");
 	    return false;
 	}
     }
@@ -226,7 +187,7 @@ public class Dictionairy {
 	    scan.nextLine();
 	    switch(result.toLowerCase()) {
 	    case "a"://add person
-		add();
+		//add();
 		break;
 	    case "d"://delet person
 		//display keys and who they map to here
@@ -293,13 +254,33 @@ public class Dictionairy {
 	public PersonInfo getPerson(Integer key){
 		return mapIntToPerson.get(key);
 	}
-	public List <PersonInfo> getEntries() {
+	public List <PersonInfo> getEntriesPreOrder() {
 		List<PersonInfo> result= new ArrayList<>(); 
-		for(Integer i: tree.printPreOrder()){
+		for(Integer i: tree.printPreOrder())	{
 		PersonInfo p = mapIntToPerson.get(i); 
 		result.add(p);
 		}
 		return result;
+	}
+	public List <PersonInfo> getEntriesInOrder() {
+		List<PersonInfo> result= new ArrayList<>(); 
+		for(Integer i: tree.printInOrder())	{
+		PersonInfo p = mapIntToPerson.get(i); 
+		result.add(p);
+		}
+		return result;
+	}
+	public List <PersonInfo> getEntriesPostOrder() {
+		List<PersonInfo> result= new ArrayList<>(); 
+		for(Integer i: tree.printPostOrder())	{
+		PersonInfo p = mapIntToPerson.get(i); 
+		result.add(p);
+		}
+		return result;
+	}
+	public String search(Integer id){
+		PersonInfo person=mapIntToPerson.get(id);
+		return person.toString();
 	}
 }
 
