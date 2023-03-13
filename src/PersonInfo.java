@@ -16,8 +16,9 @@ public class PersonInfo {
     private String  email;
     private String zip;
     private String state;
+	private Integer id;
     public PersonInfo (String firstName,String lastName,String state,
-    		String address, String phoneNumb,String city,String zip, String email){
+    		String address, String phoneNumb,String city,String zip, String email, Integer id){
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setAddress(address);
@@ -26,10 +27,17 @@ public class PersonInfo {
         this.setZip(zip);
         this.setState(state);
         this.setEmail(email);
+		this.setId(id);
     }
     
-    public PersonInfo (){
-        this(null,null,null,null,null,null,null,null);
+    private void setId(Integer id) {
+		this.id=id;
+	}
+	public Integer getId(){
+		return id;
+	}
+	public PersonInfo (){
+        this(null,null,null,null,null,null,null,null,0);
     }
 	public String getLastName() {
 		return lastName;

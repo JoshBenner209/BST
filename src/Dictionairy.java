@@ -57,13 +57,22 @@ public class Dictionairy {
 	    if (!verify(key)) {
 		exist=false;
 		PersonInfo person=new PersonInfo(firstName,LastName,
-						 state,address,phoneNumber,city,zip,email);
+						 state,address,phoneNumber,city,zip,email,key);
 		this.tree.add(key);
 		this.mapIntToPerson.put(key, person);
 		System.out.println("\nadded:\n"+person.toString()+"\nkey for "+firstName+": "+key+"\n");
 	    }
     }
     }
+	public void addEntry(Integer id, String fName, String lName, String email,
+	String phone,String address,String city,String state,String zip ){
+		if (!verify(id)) {
+			PersonInfo person=new PersonInfo(fName,lName,
+							 state,address,phone,city,zip,email,id);
+			this.tree.add(id);
+			this.mapIntToPerson.put(id, person);
+	}
+}
     
     //print in order		
     public String printInOrder() {
@@ -281,7 +290,17 @@ public class Dictionairy {
 	}
 	return false;
     }
-
+	public PersonInfo getPerson(Integer key){
+		return mapIntToPerson.get(key);
+	}
+	public List <PersonInfo> getEntries() {
+		List<PersonInfo> result= new ArrayList<>(); 
+		for(Integer i: tree.printPreOrder()){
+		PersonInfo p = mapIntToPerson.get(i); 
+		result.add(p);
+		}
+		return result;
+	}
 }
 
 

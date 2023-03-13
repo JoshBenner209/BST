@@ -11,26 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.naming.spi.DirStateFactory.Result;
 
 
 public class SearchTree<E extends Comparable<E>> {
     private SearchTreeNode<E> overallRoot; // root of overall tree
-    private int balanceFactor;
-    private int height;
     //constructs an empty search tree
     public SearchTree() {
         overallRoot = null;
-        height=height();
-        balanceFactor= balanceFactor();
     }
-    public int height() {
-        if(overallRoot==null){
-            return 0;
-        }// hef
-
-        return result;
-        
+    public int height(){
+        if(overallRoot==null) return 0;
+        return overallRoot.height;
     }
     //add adds value to tree
     //param value is the data to be stored in root
@@ -49,11 +40,90 @@ public class SearchTree<E extends Comparable<E>> {
         } else {
             root.right = add(root.right, value);
         }
-            update(root);
-        return balance(node);
-        //return root;
+        //update balance factor and height
+        update(root);
+        //re-balance tree
+        return balance(root);
+    }
+    /**
+     * @param root 
+     * @return
+     */
+    private SearchTreeNode<E> balance(SearchTreeNode<E> root){
+        //Left heavy 
+        if(root.balanceFactor ==-2){
+
+            //left-left case:
+            if(root.left.balanceFactor<=0){
+                return leftLeftCase(root);
+            //left-right case:
+            }else{
+                return leftRightCase(root);
+            }
+        //Right Heavy
+        }else if(root.balanceFactor == +2){
+
+            // right-right Case:
+            if(root.right.balanceFactor>=0){
+                return rightRightCase(root);
+            }else{//right-left case:
+                return rightLeftCase(root);
+            }
+        }
+        //root is whithin threshold <=|1|
+        return root;
+    }
+    private SearchTreeNode<E> leftLeftCase(SearchTreeNode<E> root){
+        return rightRotation(root);
+    }
+    private SearchTreeNode<E> leftRightCase(SearchTreeNode<E> root){
+        root.left = leftRotation(root.left);
+        return leftLeftCase(root);
+    }
+    private SearchTreeNode<E> rightRightCase(SearchTreeNode<E> root){
+        return leftRotation(root);
     }
 
+    private SearchTreeNode<E> rightLeftCase(SearchTreeNode<E> root){
+        root.right=rightRotation(root.right);
+        return rightRightCase(root);
+    }
+    /**
+     * @param root
+     * @return
+     */
+    private SearchTreeNode<E> leftRotation(SearchTreeNode<E> root){
+        SearchTreeNode<E> newParent = root.right;
+        root.right= newParent.left;
+        newParent.left= root;
+        update(root);
+        update(newParent);
+        return newParent;
+    }
+    /**
+     * 
+     * @param root
+     * @return
+     */
+    private SearchTreeNode<E> rightRotation(SearchTreeNode<E> root){
+        SearchTreeNode<E> newParent= root.left;
+        root.left = newParent.right;
+        newParent.right= root;
+        update(root);
+        update(newParent);
+        return newParent;
+    }
+    /**
+     * @param root
+     */
+    private void update(SearchTreeNode<E> root){
+        int leftRootHeight = (root.left == null) ? -1 : root.left.height;
+        int rightRootHeight = (root.right == null) ? -1 : root.right.height;
+       // update height
+        root.height = 1+ Math.max(leftRootHeight, rightRootHeight);
+        // update balance factor
+        root.balanceFactor= rightRootHeight-leftRootHeight;
+    }
     // post: returns true if tree contains value, returns false otherwise
     public boolean contains(E value) {
         return contains(overallRoot, value);
@@ -90,7 +160,7 @@ public class SearchTree<E extends Comparable<E>> {
     	if (root != null) {
             list.addAll(printInorder(root.left));
             list.add(root.data);
-            System.out.println(root.data);//debug print 
+            //System.out.println(root.data);//debug print 
             
             list.addAll(printInorder(root.right));
         }
@@ -108,7 +178,7 @@ public class SearchTree<E extends Comparable<E>> {
     	List<E> list= new ArrayList<>();
     	if (root != null) {
     		  list.add(root.data);
-    		  System.out.println(root.data);//debug print 
+    		  //System.out.println(root.data);//debug print 
     		  list.addAll(printInorder(root.left));  
     		  list.addAll(printInorder(root.right));
         }
@@ -166,7 +236,8 @@ public class SearchTree<E extends Comparable<E>> {
 				root.right=delete(root.right,root.data);
 			}
 		}
-		return root;	  
+        update(root);
+		return balance(root);	  
 	}
 
     //serches for the minimum value in tree
@@ -192,19 +263,25 @@ public class SearchTree<E extends Comparable<E>> {
         public E data;                   // data stored in this node
         public SearchTreeNode<E> left;   // left subtree
         public SearchTreeNode<E> right;  //  right subtree
-
+        public int height;
+        public int balanceFactor;
         //  constructs a leaf node with given data
         public SearchTreeNode(E data) {
-            this(data, null, null);
+            this(data, null, null,0,0);
+          
         }
 
         // constructs a node with the given data and links
         public SearchTreeNode(E data, SearchTreeNode<E> left,
-                              SearchTreeNode<E> right) {
+                              SearchTreeNode<E> right, int height, int balanceFactor) {
             this.data = data;
             this.left = left;
             this.right = right;
+            this.height=height;
+            this.balanceFactor=balanceFactor;
         }
+
+
     }
 }
 
